@@ -1,0 +1,9 @@
+#playground{
+    border: 1px solid black;
+    height: 600px;
+    width: 800px;
+    background: url("../images/desert_sand.jpg");
+}
+#playground * {
+  	position: absolute;
+}

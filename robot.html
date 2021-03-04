@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/custom.css">
+    <title>Aire de jeux</title>
+</head>
+<body>
+    <div id="playground">
+
+    </div>
+
+		<script type="text/javascript" src="classes/allClasses.js"></script>
+    <script>
+    	
+    		/***
+    		*
+    		* Les classes JavaScript sont un « sucre syntaxique » par rapport à l'héritage prototypal.
+    		* Elle fournit uniquement une syntaxe plus simple pour créer des objets et manipuler l'héritage.
+    		* Dans ce projet, nous utiliserons l'héritage prototypique.
+    		*
+    		***/
+        
+
+        let position1 = Position(100,0);
+        let position2 = Position(400,0);        
+        //p1.add(p2);
+        // p1 doit être (2,10)
+
+        
+        
+
+        let game = {
+          arrowLeft : false,
+          arrowRight : false,
+          arrowUp : false,
+          arrowDown : false,
+          robot : new Robot(),
+          listeRectangle : {1: new Rectangle(position1, "images/x_wing.png"), 2: new Rectangle(position2, "images/obi_wan_starfighter.png")},
+          run : true,
+          tFrameLast : 0,
+        }
+
+        game.update = function (tFrame) {
+          let time = tFrame - game.tFrameLast;
+          game.tFrameLast = tFrame;
+          speed = 100;
+
+          if (this.arrowLeft) {
+            game.robot.getHitbox(game.robot.pos);
+            this.robot.speedX = -speed;
+          } else if (this.arrowRight) {
+            this.robot.speedX = speed;
+          } else {
+            this.robot.speedX = 0;
+          }
+
+          if (this.arrowUp) {
+            this.robot.speedY = -speed;
+          } else if (this.arrowDown) {
+            this.robot.speedY = speed;
+          } else {
+            this.robot.speedY = 0;
+          }
+
+          game.robot.moveFrame(time);
+          game.robot.getHitbox(this.robot.pos);
+          
+          
+          for (let [key, rectangle] of Object.entries(this.listeRectangle)) {
+          	//rectangle.speedY = speed;
+          	rectangle.moveFrame(time);
+          	rectangle.getHitbox(rectangle.pos);
+          	
+          	if (rectangle.areIntersecting(this.robot, rectangle)) {         	
+	          	console.log("touche");
+	          }
+          	
+          }
+          
+          
+          
+          
+          
+          
+          
+          
+        }
+
+        window.onkeydown = function (e) {
+          if ('ArrowUp' === e.key) {
+            game.arrowUp = true;
+          }
+
+          if ('ArrowLeft' === e.key) {
+            game.arrowLeft = true;
+          }
+
+          if ('ArrowDown' === e.key) {
+            game.arrowDown = true;
+          }
+
+          if ('ArrowRight' === e.key) {
+            game.arrowRight = true;
+          }
+
+          if ('s' === e.key) {
+            game.run = false;
+          }
+        }
+
+        window.onkeyup = function (e) {
+          if ('ArrowUp' === e.key) {
+            game.arrowUp = false;
+          }
+
+          if ('ArrowLeft' === e.key) {
+            game.arrowLeft = false;
+          }
+
+          if ('ArrowDown' === e.key) {
+            game.arrowDown = false;
+          }
+
+          if ('ArrowRight' === e.key) {
+            game.arrowRight = false;
+          }
+        }
+        
+
+        
+
+        function Size2D(width=0,height=0) {
+          this.width = width;
+          this.height = height;
+        }
+        
+
+
+
+
+        // tFrame est le temps d'appel de l'animation passé à main en ms       
+        function main(tFrame) {
+
+          game.stopMain = window.requestAnimationFrame( main );
+          if (! game.run) {
+            window.cancelAnimationFrame( game.stopMain );
+            console.log("Game over");
+          } else {
+            game.update(tFrame);
+          }
+        }
+  
+        main(0);
+        
+    </script>
+</body>
+</html>
