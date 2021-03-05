@@ -8,6 +8,7 @@
     <title>Aire de jeux</title>
 </head>
 <body>
+		<p>Jeu R2D2</p>
     <div id="playground">
 
     </div>
@@ -24,8 +25,8 @@
     		***/
         
 
-        let position1 = Position(100,0);
-        let position2 = Position(400,0);        
+        let position1 = Position(100,50);
+        let position2 = Position(400,50);        
         //p1.add(p2);
         // p1 doit être (2,10)
 
@@ -38,29 +39,31 @@
           arrowUp : false,
           arrowDown : false,
           robot : new Robot(),
-          listeRectangle : {1: new Rectangle(position1, "images/x_wing.png"), 2: new Rectangle(position2, "images/obi_wan_starfighter.png")},
+          listSpaceShip : {1: new SpaceShip(SpaceShip.LIGHT_SIDE, position1, "images/x_wing.png", 1), 2: new SpaceShip(SpaceShip.DARK_SIDE, position2, "images/tie_fighter.png", 2)},
           run : true,
           tFrameLast : 0,
+          score : 0,
+          speedRobot : 100,
+          speedSpaceShip : 50,
         }
 
         game.update = function (tFrame) {
-          let time = tFrame - game.tFrameLast;
-          game.tFrameLast = tFrame;
-          speed = 100;
+          let time = tFrame - this.tFrameLast;
+          this.tFrameLast = tFrame;
 
           if (this.arrowLeft) {
-            game.robot.getHitbox(game.robot.pos);
-            this.robot.speedX = -speed;
+            this.robot.getHitbox(game.robot.pos);
+            this.robot.speedX = - this.speedRobot;
           } else if (this.arrowRight) {
-            this.robot.speedX = speed;
+            this.robot.speedX = this.speedRobot;
           } else {
             this.robot.speedX = 0;
           }
 
           if (this.arrowUp) {
-            this.robot.speedY = -speed;
+            this.robot.speedY = - this.speedRobot;
           } else if (this.arrowDown) {
-            this.robot.speedY = speed;
+            this.robot.speedY = this.speedRobot;
           } else {
             this.robot.speedY = 0;
           }
@@ -68,14 +71,34 @@
           game.robot.moveFrame(time);
           game.robot.getHitbox(this.robot.pos);
           
-          
-          for (let [key, rectangle] of Object.entries(this.listeRectangle)) {
-          	//rectangle.speedY = speed;
-          	rectangle.moveFrame(time);
-          	rectangle.getHitbox(rectangle.pos);
+					
+          for (let [key, spaceShip] of Object.entries(this.listSpaceShip)) {
+          	spaceShip.speedY = this.speedSpaceShip;
+          	spaceShip.moveFrame(time);
           	
-          	if (rectangle.areIntersecting(this.robot, rectangle)) {         	
-	          	console.log("touche");
+          	spaceShip.getHitbox(spaceShip.pos);
+          	
+          	if (spaceShip.areIntersecting(this.robot, spaceShip)) {         	          	
+	          	// Modification du score en fonction du type de space ship touché
+	          	if (SpaceShip.LIGHT_SIDE === spaceShip.side){
+	          		this.score += 1;
+	          		
+	          		// Supprime le spaceship touché
+	          		spaceShip.remove();
+	          		
+	          	} else if (SpaceShip.DARK_SIDE === spaceShip.side){
+	          		this.score -= 1;
+	          		
+	          		// Supprime le spaceship touché
+	          		spaceShip.remove();
+	          		
+	          	} else {
+	          		console.error("Type du vaisseau non reconnu");
+	          		
+	          	}
+  	
+	          	
+	          	console.log(this.score);
 	          }
           	
           }

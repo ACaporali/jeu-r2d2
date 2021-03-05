@@ -4,7 +4,7 @@
 *
 ***/
 // Notion de Position : s'utilise avec ou sans le new
-function Position(x=0,y=0) {
+function Position(x=0,y=50) {
     if (this == undefined || this == window) {
         // on crée un nouvel objet par new que l'on rend
         return new Position(x,y);
@@ -28,18 +28,21 @@ Position.prototype.add = function(position=Position()) {
 * Définition de la classe Sprite
 *
 ***/
-function Sprite(imgPath, insideDOM= window.document.getElementById("playground"), position= Position(0,0)) {
+function Sprite(imgPath, insideDOM= window.document.getElementById("playground"), position= Position(0,50), id=0) {
     this.position = position;
     let img = document.createElement("img");
     img.setAttribute("src", imgPath);
+    img.setAttribute("id", id);
+    console.log(img);
     this.DOM = insideDOM.appendChild(img);
     this.speedX = 0;
     this.speedY = 0;
+    this.id = id;
 };
 
 
 Sprite.prototype.moveTo = function(pos=Position()) {
-	// Overwritée dans les classe enfants (Robot, Rectangle)
+	// Overwritée dans les classe enfants (Robot, SpaceShip)
 };
 
 
@@ -71,23 +74,29 @@ Sprite.prototype.getHitbox = function() {
  
 /***
 *
-* Définition de la classe Rectangle
+* Définition de la classe SpaceShip
 *
 ***/
-function Rectangle(position= Position(100,0), imgPath= "images/x_wing.png",insideDOM= window.document.getElementById("playground")) {
-    // Rectangle récupère les attributs de Sprite (héritage)
-    Sprite.call(this, imgPath, insideDOM, position);
+function SpaceShip(side, position= Position(100,50), imgPath= "images/x_wing.png", id, insideDOM= window.document.getElementById("playground")) {
+    // SpaceShip récupère les attributs de Sprite (héritage)
+    Sprite.call(this, imgPath, insideDOM, position, id);
+    this.side = side;
+    
 }
 
+// Definition constantes
+Object.defineProperty(SpaceShip, "LIGHT_SIDE", { value: "light" });
+Object.defineProperty(SpaceShip, "DARK_SIDE", { value: "dark" });
 
-// Asignation du prototype de Sprite à Rectangle. Héritage des méthodes de Rectangle dans Robot (héritage)
-Rectangle.prototype = Object.create(Sprite.prototype);
-// La ligne du dessus change le constructeur de notre classe Rectangle.
+
+// Asignation du prototype de Sprite à SpaceShip. Héritage des méthodes de SpaceShip dans Robot (héritage)
+SpaceShip.prototype = Object.create(Sprite.prototype);
+// La ligne du dessus change le constructeur de notre classe SpaceShip.
 // La ligne qui suis corrige ce problème
-Rectangle.prototype.constructor = Rectangle;
+SpaceShip.prototype.constructor = SpaceShip;
 	
 
-Rectangle.prototype.areIntersecting = function(item1,item2) {
+SpaceShip.prototype.areIntersecting = function(item1,item2) {
 	// Detecte si deux elements se supperposent
   if((item1.position.y + item1.size.height) > item2.position.y
     && item1.position.x < (item2.position.x + item2.size.height)
@@ -97,7 +106,9 @@ Rectangle.prototype.areIntersecting = function(item1,item2) {
     }
 }
 
-Rectangle.prototype.inside = function (r=Rectangle()) {
+
+
+/*SpaceShip.prototype.inside = function (r=SpaceShip()) {
   if((this.position.x < r.position.x + r.size.width) && (this.position.x > r.position.x)) {
     return true;
   }
@@ -105,13 +116,15 @@ Rectangle.prototype.inside = function (r=Rectangle()) {
   if((this.position.x + this.size.width > r.position.x) && (this.position.x + this.size.width < r.position.x + r.size.width)) {
     return true;
   }
-}
+}*/
 
 
 
 // Overwrite de la methode moveTo de Sprite
-Rectangle.prototype.moveTo = function(position=Position(),whenOutOfPlayground = function(position) {
+SpaceShip.prototype.moveTo = function(position=Position(),whenOutOfPlayground = function(position) {
   console.error("Disparition du vaisseau");
+  this.remove();
+  
 }) {
     // Changement de position si le robot est dans le playground (le sable)
     if (position.x <= 800 - this.DOM.clientWidth && position.x >= 0) {
@@ -121,11 +134,22 @@ Rectangle.prototype.moveTo = function(position=Position(),whenOutOfPlayground = 
 			whenOutOfPlayground.call(this, position);
 		}
 		
-		if (position.y <= 600 - this.DOM.clientHeight && position.y >= 0) {
+		if (position.y <= 650 - this.DOM.clientHeight && position.y >= 50) {
     	this.DOM.style.top = position.y+"px";
     } else{
 			whenOutOfPlayground.call(this, position);
 		}
+};
+
+
+SpaceShip.prototype.remove = function() {
+    
+    let id = this.id;
+    console.log(id);
+    console.log(game.listSpaceShip.id);
+    delete game.listSpaceShip.id;
+    this.DOM.remove();
+    console.log(game);
 };
 
 
@@ -160,7 +184,7 @@ Robot.prototype.moveTo = function(position=Position(),whenOutOfPlayground = func
 			whenOutOfPlayground.call(this, position);
 		}
 		
-		if (position.y <= 600 - this.DOM.clientHeight && position.y >= 0) {
+		if (position.y <= 650 - this.DOM.clientHeight && position.y >= 50) {
     	this.DOM.style.top = position.y+"px";
     } else{
 			whenOutOfPlayground.call(this, position);
