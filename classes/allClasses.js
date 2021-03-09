@@ -33,7 +33,6 @@ function Sprite(imgPath, insideDOM= window.document.getElementById("playground")
     let img = document.createElement("img");
     img.setAttribute("src", imgPath);
     img.setAttribute("id", id);
-    console.log(img);
     this.DOM = insideDOM.appendChild(img);
     this.speedX = 0;
     this.speedY = 0;
@@ -42,7 +41,7 @@ function Sprite(imgPath, insideDOM= window.document.getElementById("playground")
 
 
 Sprite.prototype.moveTo = function(pos=Position()) {
-	// Overwritée dans les classe enfants (Robot, SpaceShip)
+// Overwritée dans les classe enfants (Robot, SpaceShip)
 };
 
 
@@ -57,11 +56,10 @@ Sprite.prototype.moveFrame = function(duration) {
     let y = this.speedY * duration / 1000;
 
     this.moveRel(Position(x,y));
-    
+   
 }
 
 Sprite.prototype.getHitbox = function() {
-
     this.size = {width : this.DOM.width, height : this.DOM.height};
 }
  
@@ -81,7 +79,7 @@ function SpaceShip(side, position= Position(100,50), imgPath= "images/x_wing.png
     // SpaceShip récupère les attributs de Sprite (héritage)
     Sprite.call(this, imgPath, insideDOM, position, id);
     this.side = side;
-    
+   
 }
 
 // Definition constantes
@@ -94,10 +92,9 @@ SpaceShip.prototype = Object.create(Sprite.prototype);
 // La ligne du dessus change le constructeur de notre classe SpaceShip.
 // La ligne qui suis corrige ce problème
 SpaceShip.prototype.constructor = SpaceShip;
-	
 
 SpaceShip.prototype.areIntersecting = function(item1,item2) {
-	// Detecte si deux elements se supperposent
+// Detecte si deux elements se supperposent
   if((item1.position.y + item1.size.height) > item2.position.y
     && item1.position.x < (item2.position.x + item2.size.height)
     && item1.position.y < (item2.position.y  + item2.size.height)
@@ -124,32 +121,27 @@ SpaceShip.prototype.areIntersecting = function(item1,item2) {
 SpaceShip.prototype.moveTo = function(position=Position(),whenOutOfPlayground = function(position) {
   console.error("Disparition du vaisseau");
   this.remove();
-  
+ 
 }) {
     // Changement de position si le robot est dans le playground (le sable)
     if (position.x <= 800 - this.DOM.clientWidth && position.x >= 0) {
-			this.DOM.style.left = position.x+"px";
+		this.DOM.style.left = position.x+"px";
 
-    } else{
-			whenOutOfPlayground.call(this, position);
-		}
-		
-		if (position.y <= 650 - this.DOM.clientHeight && position.y >= 50) {
-    	this.DOM.style.top = position.y+"px";
-    } else{
-			whenOutOfPlayground.call(this, position);
-		}
+	} else{
+		whenOutOfPlayground.call(this, position);
+	}
+	if (position.y <= 650 - this.DOM.clientHeight && position.y >= 50) {
+		this.DOM.style.top = position.y+"px";
+	} else{
+		whenOutOfPlayground.call(this, position);
+	}
 };
 
 
-SpaceShip.prototype.remove = function() {
-    
-    let id = this.id;
-    console.log(id);
-    console.log(game.listSpaceShip.id);
-    delete game.listSpaceShip.id;
+SpaceShip.prototype.remove = function() {  
+    const id = this.id;
+    delete game.listSpaceShip[id];
     this.DOM.remove();
-    console.log(game);
 };
 
 
@@ -163,7 +155,7 @@ SpaceShip.prototype.remove = function() {
 function Robot(imgPath="images/R2D2.png",insideDOM=window.document.getElementById("playground")) {
     // Robot récupère les attributs de Sprite (héritage)
     Sprite.call(this, imgPath, insideDOM);
-    
+   
 }
 
 // Asignation du prototype de Sprite à Robot. Héritage des méthodes de Sprite dans Robot (héritage)
@@ -178,16 +170,14 @@ Robot.prototype.moveTo = function(position=Position(),whenOutOfPlayground = func
 }) {
     // Changement de position si le robot est dans le playground (le sable)
     if (position.x <= 800 - this.DOM.clientWidth && position.x >= 0) {
-			this.DOM.style.left = position.x+"px";
+		this.DOM.style.left = position.x+"px";
 
-    } else{
-			whenOutOfPlayground.call(this, position);
+			} else{
+		whenOutOfPlayground.call(this, position);
 		}
-		
 		if (position.y <= 650 - this.DOM.clientHeight && position.y >= 50) {
-    	this.DOM.style.top = position.y+"px";
-    } else{
-			whenOutOfPlayground.call(this, position);
-		}
+			this.DOM.style.top = position.y+"px";
+			} else{
+		whenOutOfPlayground.call(this, position);
+	}
 };
-
