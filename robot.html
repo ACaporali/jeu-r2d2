@@ -8,15 +8,19 @@
 		<title>Aire de jeux</title>
 	</head>
 	<body>
-	<p>Jeu R2D2</p>
+		<p>Jeu R2D2</p>
 		<div id="playground">
 
 		</div>
 		<p>Score : <span id="score"></span></p>
 
-	<script type="text/javascript" src="classes/allClasses.js"></script>
+		<script type="text/javascript" src="classe/Position.js"></script>
+		<script type="text/javascript" src="classe/Sprite.js"></script>
+		<script type="text/javascript" src="classe/Robot.js"></script>
+		<script type="text/javascript" src="classe/SpaceShip.js"></script>
+		
 		<script>
-	   
+
 			/***
 			*
 			* Les classes JavaScript sont un « sucre syntaxique » par rapport à l'héritage prototypal.
@@ -24,11 +28,12 @@
 			* Dans ce projet, nous utiliserons l'héritage prototypique.
 			*
 			***/
-		   
+
 
 			let position1 = Position(100,50);
 			let position2 = Position(400,50);
-				   
+			
+
 
 
 			let game = {
@@ -37,7 +42,7 @@
 				arrowUp : false,
 				arrowDown : false,
 				robot : new Robot(),
-				listSpaceShip : {1: new SpaceShip(SpaceShip.LIGHT_SIDE, position1, "images/x_wing.png", 1), 2: new SpaceShip(SpaceShip.DARK_SIDE, position2, "images/tie_fighter.png", 2)},
+				listSpaceShip : {1: new SpaceShip(SpaceShip.LIGHT_SIDE, position1, "image/x_wing.png", 1), 2: new SpaceShip(SpaceShip.DARK_SIDE, position2, "image/tie_fighter.png", 2)},
 				run : true,
 				tFrameLast : 0,
 				score : 0,
@@ -45,9 +50,9 @@
 				speedSpaceShip : 50,
 			}
 
-			game.update = function (tFrame) {        
+			game.update = function (tFrame) {
 				let time = tFrame - this.tFrameLast;
-				this.tFrameLast = tFrame;
+				this.tFrameLast = tFrame;				
 
 				if (this.arrowLeft) {
 					this.robot.getHitbox(game.robot.pos);
@@ -65,41 +70,43 @@
 				} else {
 					this.robot.speedY = 0;
 				}
+				
+				game.robot.moveFrame(time);
+				game.robot.getHitbox(this.robot.pos);
 
-				  game.robot.moveFrame(time);
-				  game.robot.getHitbox(this.robot.pos);
-			 
-				  for (let [key, spaceShip] of Object.entries(this.listSpaceShip)) {
+				for (let [key, spaceShip] of Object.entries(this.listSpaceShip)) {
 					spaceShip.speedY = this.speedSpaceShip;
 					spaceShip.moveFrame(time);
-					 
+
 					spaceShip.getHitbox(spaceShip.pos);
-					 
-					if (spaceShip.areIntersecting(this.robot, spaceShip)) {                  
+
+					if (spaceShip.areIntersecting(this.robot, spaceShip)) {
 						// Modification du score en fonction du type de space ship touché
 						if (SpaceShip.LIGHT_SIDE === spaceShip.side){
-						this.score += 1;
-						 
-						// Supprime le spaceship touché
-						spaceShip.remove();
-						 
-						} else if (SpaceShip.DARK_SIDE === spaceShip.side){
-							this.score -= 1;
-						 
+							this.score += 1;
+
 							// Supprime le spaceship touché
 							spaceShip.remove();
-						 
+
+						} else if (SpaceShip.DARK_SIDE === spaceShip.side){
+							this.score -= 1;
+
+							// Supprime le spaceship touché
+							spaceShip.remove();
+
 						} else {
 							console.error("Type du vaisseau non reconnu");
-						 
+
 						}
 					}
-					 
+
 					// Changement du score
 					document.getElementById("score").textContent = this.score;
-				 
+
 				}
 			}
+			
+			
 
 
 			window.onkeydown = function (e) {
@@ -141,9 +148,15 @@
 					game.arrowRight = false;
 				}
 			}
-		   
+			
+			//Génération de spaceShip toutes les X secondes
+			setInterval(function (){
+				console.log('coucou');
+			},2000 );
+		  
 
-			// tFrame est le temps d'appel de l'animation passé à main en ms      
+
+			// tFrame est le temps d'appel de l'animation passé à main en ms
 			function main(tFrame) {
 				game.stopMain = window.requestAnimationFrame( main );
 				if (! game.run) {
@@ -153,9 +166,9 @@
 					game.update(tFrame);
 				}
 			}
-	 
+
 			main(0);
-		   
+
 		</script>
 	</body>
 </html>
