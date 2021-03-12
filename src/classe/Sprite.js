@@ -1,9 +1,10 @@
 /***
 *
 * Définition de la classe Sprite
+* 80 = le haut de la page (0) + le titre <h1> (80)
 *
 ***/
-function Sprite(imgPath, insideDOM= window.document.getElementById("playground"), position= Position(0,50), id=0) {
+function Sprite(imgPath, insideDOM= window.document.getElementById("playground"), position= Position(0,80), id=0) {
 	this.position = position;
 	let img = document.createElement("img");
 	img.setAttribute("src", imgPath);
@@ -12,6 +13,7 @@ function Sprite(imgPath, insideDOM= window.document.getElementById("playground")
 	this.speedX = 0;
 	this.speedY = 0;
 	this.id = id;
+	console.log(this.DOM);
 };
 
 

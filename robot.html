@@ -8,16 +8,23 @@
 		<title>Aire de jeux</title>
 	</head>
 	<body>
-		<p>Jeu R2D2</p>
+		<h1>Jeu R2D2</h1>
 		<div id="playground">
 
 		</div>
 		<p>Score : <span id="score"></span></p>
+		<p>Touches de controle clavier :</p>	
+		<ul>
+			<li>Déplacement : Flèches directionnelles</li>
+			<li>Stop : S</li>
+		</ul>	
 
-		<script type="text/javascript" src="classe/Position.js"></script>
-		<script type="text/javascript" src="classe/Sprite.js"></script>
-		<script type="text/javascript" src="classe/Robot.js"></script>
-		<script type="text/javascript" src="classe/SpaceShip.js"></script>
+		<script type="text/javascript" src="src/classe/Position.js"></script>
+		<script type="text/javascript" src="src/classe/Sprite.js"></script>
+		<script type="text/javascript" src="src/classe/Robot.js"></script>
+		<script type="text/javascript" src="src/classe/SpaceShip.js"></script>
+		<script type="text/javascript" src="src/control/keyControl.js"></script>
+		<script type="text/javascript" src="src/control/gameControl.js"></script>
 		
 		<script>
 
@@ -30,138 +37,13 @@
 			***/
 
 
-			let position1 = Position(100,50);
-			let position2 = Position(400,50);
-			
-
-
-
-			let game = {
-				arrowLeft : false,
-				arrowRight : false,
-				arrowUp : false,
-				arrowDown : false,
-				robot : new Robot(),
-				listSpaceShip : {1: new SpaceShip(SpaceShip.LIGHT_SIDE, position1, "image/x_wing.png", 1), 2: new SpaceShip(SpaceShip.DARK_SIDE, position2, "image/tie_fighter.png", 2)},
-				run : true,
-				tFrameLast : 0,
-				score : 0,
-				speedRobot : 100,
-				speedSpaceShip : 50,
-			}
-
-			game.update = function (tFrame) {
-				let time = tFrame - this.tFrameLast;
-				this.tFrameLast = tFrame;				
-
-				if (this.arrowLeft) {
-					this.robot.getHitbox(game.robot.pos);
-					this.robot.speedX = - this.speedRobot;
-				} else if (this.arrowRight) {
-					this.robot.speedX = this.speedRobot;
-				} else {
-					this.robot.speedX = 0;
-				}
-
-				if (this.arrowUp) {
-					this.robot.speedY = - this.speedRobot;
-				} else if (this.arrowDown) {
-					this.robot.speedY = this.speedRobot;
-				} else {
-					this.robot.speedY = 0;
-				}
-				
-				game.robot.moveFrame(time);
-				game.robot.getHitbox(this.robot.pos);
-
-				for (let [key, spaceShip] of Object.entries(this.listSpaceShip)) {
-					spaceShip.speedY = this.speedSpaceShip;
-					spaceShip.moveFrame(time);
-
-					spaceShip.getHitbox(spaceShip.pos);
-
-					if (spaceShip.areIntersecting(this.robot, spaceShip)) {
-						// Modification du score en fonction du type de space ship touché
-						if (SpaceShip.LIGHT_SIDE === spaceShip.side){
-							this.score += 1;
-
-							// Supprime le spaceship touché
-							spaceShip.remove();
-
-						} else if (SpaceShip.DARK_SIDE === spaceShip.side){
-							this.score -= 1;
-
-							// Supprime le spaceship touché
-							spaceShip.remove();
-
-						} else {
-							console.error("Type du vaisseau non reconnu");
-
-						}
-					}
-
-					// Changement du score
-					document.getElementById("score").textContent = this.score;
-
-				}
-			}
-			
-			
-
-
-			window.onkeydown = function (e) {
-				if ('ArrowUp' === e.key) {
-					game.arrowUp = true;
-				}
-
-				if ('ArrowLeft' === e.key) {
-					game.arrowLeft = true;
-				}
-
-				if ('ArrowDown' === e.key) {
-					game.arrowDown = true;
-				}
-
-				if ('ArrowRight' === e.key) {
-					game.arrowRight = true;
-				}
-
-				if ('s' === e.key) {
-					game.run = false;
-				}
-			}
-
-			window.onkeyup = function (e) {
-				if ('ArrowUp' === e.key) {
-					game.arrowUp = false;
-				}
-
-				if ('ArrowLeft' === e.key) {
-					game.arrowLeft = false;
-				}
-
-				if ('ArrowDown' === e.key) {
-					game.arrowDown = false;
-				}
-
-				if ('ArrowRight' === e.key) {
-					game.arrowRight = false;
-				}
-			}
-			
-			//Génération de spaceShip toutes les X secondes
-			setInterval(function (){
-				console.log('coucou');
-			},2000 );
-		  
-
-
 			// tFrame est le temps d'appel de l'animation passé à main en ms
 			function main(tFrame) {
+				//Utilisation de gameControl.js
 				game.stopMain = window.requestAnimationFrame( main );
 				if (! game.run) {
 					window.cancelAnimationFrame( game.stopMain );
-					console.log("Game over");
+					alert("Game over");
 				} else {
 					game.update(tFrame);
 				}

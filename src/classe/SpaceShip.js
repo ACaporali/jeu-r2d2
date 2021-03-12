@@ -47,7 +47,7 @@ return true;
 
 // Overwrite de la methode moveTo de Sprite
 SpaceShip.prototype.moveTo = function(position=Position(),whenOutOfPlayground = function(position) {
-	console.error("Disparition du vaisseau");
+	console.log("Disparition du vaisseau");
 	this.remove();
 
 }) {
