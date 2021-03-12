@@ -13,7 +13,6 @@ function Sprite(imgPath, insideDOM= window.document.getElementById("playground")
 	this.speedX = 0;
 	this.speedY = 0;
 	this.id = id;
-	console.log(this.DOM);
 };
 
 
