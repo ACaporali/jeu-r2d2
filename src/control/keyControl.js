@@ -18,6 +18,11 @@ window.onkeydown = function (e) {
 	if ('s' === e.key) {
 		game.run = false;
 	}
+	
+	if ('p' === e.key) {
+		game.run = true;
+		main(0);
+	}
 }
 
 window.onkeyup = function (e) {

@@ -52,13 +52,13 @@ SpaceShip.prototype.moveTo = function(position=Position(),whenOutOfPlayground = 
 
 }) {
 	// Changement de position si le robot est dans le playground (le sable)
-	if (position.x <= 800 - this.DOM.clientWidth && position.x >= 0) {
+	if (position.x <= playgroundWidth - this.DOM.clientWidth && position.x >= 0) {
 		this.DOM.style.left = position.x+"px";
 
 	} else{
 		whenOutOfPlayground.call(this, position);
 	}
-	if (position.y <= 650 - this.DOM.clientHeight && position.y >= 50) {
+	if (position.y <= (playgroundOffsetTop + playgroundHeight) - this.DOM.clientHeight && position.y >= playgroundOffsetTop) {
 		this.DOM.style.top = position.y+"px";
 	} else{
 		whenOutOfPlayground.call(this, position);

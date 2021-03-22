@@ -1,5 +1,9 @@
 // Compteur pour incrémenter l'id des spaceShip qui seront crées (nb de SpaceShip créés)
 let size = 0;
+const playgroundOffsetTop = window.document.getElementById("playground").offsetTop;
+const playgroundWidth = 800;
+const playgroundHeight = 600;
+
 const timeCreatSpaceShip = 1000;
 const speedRobot = 150;
 const speedSpaceShip = 100;
@@ -55,6 +59,8 @@ game.update = function (tFrame) {
 	for (let [key, spaceShip] of Object.entries(this.listSpaceShip)) {
 		spaceShip.speedY = this.speedSpaceShip;
 		spaceShip.moveFrame(time);
+		console.log("spaceShip.moveFrame");
+		console.log(game.stopMain);
 
 		spaceShip.getHitbox(spaceShip.pos);
 
@@ -78,7 +84,7 @@ game.update = function (tFrame) {
 			}
 		}
 
-		// Changement du score
+		// Changement du score dans le HTML
 		document.getElementById("score").textContent = this.score;
 
 	}
@@ -88,16 +94,18 @@ game.update = function (tFrame) {
 
 //Création de spaceShip toutes les X secondes
 setInterval(function (){
-	// Paramètres du nouveau SpaceShip
-	const newId = size + 1;
-	const position = getRandomPosition();
-	const side = getRandomSide();
-	const image = getImage(side);
-	console.log("new id:"+newId);
-	game.listSpaceShip[newId] = new SpaceShip(side, position, image, newId);
-	
-	// Incrémentation de size (nb de SpaceShip créés)
-	size = newId;
+	if (game.run) {
+		// Paramètres du nouveau SpaceShip
+		const newId = size + 1;
+		const position = getRandomPosition();
+		const side = getRandomSide();
+		const image = getImage(side);
+		
+		game.listSpaceShip[newId] = new SpaceShip(side, position, image, newId);
+		
+		// Incrémentation de size (nb de SpaceShip créés)
+		size = newId;
+	}
 	
 }, timeCreatSpaceShip );
 
@@ -122,10 +130,10 @@ function getRandomSide() {
 
 //Retourne de façon aléatoire une position
 function getRandomPosition() {
-	// 670 = taille du playgroud (800) - taille moyen des Spaceship (130)
-	// -> ne pas faire apparaitre des SpaceShip en dehors du playground
-	// 80 = le haut de la page (0) + le titre <h1> (80)
-	return Position (getRandomInt(670),80);
+	// argument 1 : 670 = taille du playgroud (800) - taille moyen des Spaceship (130)
+	// 							-> ne pas faire apparaitre des SpaceShip en dehors du playground
+	// argument 2 : valeur de l'espacement entre le haut de la fenetre et le playground (img dessert)
+	return Position (getRandomInt(670), playgroundOffsetTop);
 }
 
 //Retourne de façon aléatoire une image en fonction de son "side"

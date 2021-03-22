@@ -1,10 +1,9 @@
 /***
 *
 * Définition de la classe Sprite
-* 80 = le haut de la page (0) + le titre <h1> (80)
 *
 ***/
-function Sprite(imgPath, insideDOM= window.document.getElementById("playground"), position= Position(0,80), id=0) {
+function Sprite(imgPath, insideDOM= window.document.getElementById("playground"), position= Position(5, playgroundOffsetTop), id=0) {
 	this.position = position;
 	let img = document.createElement("img");
 	img.setAttribute("src", imgPath);
@@ -17,7 +16,7 @@ function Sprite(imgPath, insideDOM= window.document.getElementById("playground")
 
 
 Sprite.prototype.moveTo = function(pos=Position()) {
-	// Overwritée dans les classe enfants (Robot, SpaceShip)
+	// Overwritée dans les classe enfants (Robot et SpaceShip)
 };
 
 

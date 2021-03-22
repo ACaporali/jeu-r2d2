@@ -9,15 +9,19 @@
 	</head>
 	<body>
 		<h1>Jeu R2D2</h1>
+		<p>Atteigniez votre plus haut score en touchant les vaisseaux de l'Alliance, gare à ceux de l'Empire ...</p>
+		<h2>Touches de controle clavier :</h2>	
+		<ul>
+			<li>Déplacement : Flèches directionnelles</li>
+			<li>Play : P</li>
+			<li>Stop : S</li>
+		</ul>
+		
+		<p>Score : <span id="score"></span></p>
 		<div id="playground">
 
 		</div>
-		<p>Score : <span id="score"></span></p>
-		<p>Touches de controle clavier :</p>	
-		<ul>
-			<li>Déplacement : Flèches directionnelles</li>
-			<li>Stop : S</li>
-		</ul>	
+		
 
 		<script type="text/javascript" src="src/classe/Position.js"></script>
 		<script type="text/javascript" src="src/classe/Sprite.js"></script>
@@ -42,10 +46,15 @@
 				//Utilisation de gameControl.js
 				game.stopMain = window.requestAnimationFrame( main );
 				if (! game.run) {
-					window.cancelAnimationFrame( game.stopMain );
-					alert("Game over");
+					//game.stopMain = window.requestAnimationFrame( main );
+					//window.cancelAnimationFrame( game.stopMain );
+					//window.cancelAnimationFrame( main );
+					console.log("stop!");
 				} else {
 					game.update(tFrame);
+					//game.stopMain = window.requestAnimationFrame( main );
+					
+					//window.requestAnimationFrame( main );
 				}
 			}
 
