@@ -1,13 +1,29 @@
-#playground{
+h1 {
+	text-align: center;
+}
+
+#playground {
     border: 1px solid black;
     height: 600px;
     width: 800px;
     background: url("../image/desert_sand.jpg");
 }
-#playground * {
+
+#playground img {
   	position: absolute;
 }
 
-h1 {
-	text-align: center;
+#information {
+	display: flex;
+	justify-content: right;
+}
+
+#information p {
+	margin-right: 10px;
+	color: #00f;
+	font-size: 20px;
+}
+
+#status {
+	text-decoration: underline;
 }

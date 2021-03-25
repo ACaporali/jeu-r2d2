@@ -31,27 +31,13 @@ SpaceShip.prototype.areIntersecting = function(item1,item2) {
 	}
 }
 
-
-
-/*SpaceShip.prototype.inside = function (r=SpaceShip()) {
-if((this.position.x < r.position.x + r.size.width) && (this.position.x > r.position.x)) {
-return true;
-}
-
-if((this.position.x + this.size.width > r.position.x) && (this.position.x + this.size.width < r.position.x + r.size.width)) {
-return true;
-}
-}*/
-
-
-
 // Overwrite de la methode moveTo de Sprite
 SpaceShip.prototype.moveTo = function(position=Position(),whenOutOfPlayground = function(position) {
 	console.log("Disparition du vaisseau");
 	this.remove();
 
 }) {
-	// Changement de position si le robot est dans le playground (le sable)
+	// Changement de position si le spaceship est dans le playground (le sable)
 	if (position.x <= playgroundWidth - this.DOM.clientWidth && position.x >= 0) {
 		this.DOM.style.left = position.x+"px";
 

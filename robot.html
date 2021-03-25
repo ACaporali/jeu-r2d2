@@ -12,15 +12,17 @@
 		<p>Atteigniez votre plus haut score en touchant les vaisseaux de l'Alliance, gare à ceux de l'Empire ...</p>
 		<h2>Touches de controle clavier :</h2>	
 		<ul>
-			<li>Déplacement : Flèches directionnelles</li>
-			<li>Play : P</li>
-			<li>Stop : S</li>
+			<li>Déplacement : Flèches directionnelles ou "z","q","s","d"</li>
+			<li>Continuer : c</li>
+			<li>Pause : p</li>
 		</ul>
-		
-		<p>Score : <span id="score"></span></p>
-		<div id="playground">
 
+		
+		<div id="playground">
+			<div id="information"><p><span id="status"></span> Score : <span id="score"></span></p></div>
 		</div>
+		
+		
 		
 
 		<script type="text/javascript" src="src/classe/Position.js"></script>
@@ -28,38 +30,38 @@
 		<script type="text/javascript" src="src/classe/Robot.js"></script>
 		<script type="text/javascript" src="src/classe/SpaceShip.js"></script>
 		<script type="text/javascript" src="src/control/keyControl.js"></script>
-		<script type="text/javascript" src="src/control/gameControl.js"></script>
-		
+		<script type="text/javascript" src="src/control/gameControl.js"></script>	
 		<script>
-
-			/***
-			*
-			* Les classes JavaScript sont un « sucre syntaxique » par rapport à l'héritage prototypal.
-			* Elle fournit uniquement une syntaxe plus simple pour créer des objets et manipuler l'héritage.
-			* Dans ce projet, nous utiliserons l'héritage prototypique.
-			*
-			***/
-
-
 			// tFrame est le temps d'appel de l'animation passé à main en ms
-			function main(tFrame) {
-				//Utilisation de gameControl.js
-				game.stopMain = window.requestAnimationFrame( main );
-				if (! game.run) {
-					//game.stopMain = window.requestAnimationFrame( main );
-					//window.cancelAnimationFrame( game.stopMain );
-					//window.cancelAnimationFrame( main );
-					console.log("stop!");
-				} else {
-					game.update(tFrame);
-					//game.stopMain = window.requestAnimationFrame( main );
+			function main(tFrame) {				
+				if(game.run) {
+					// Changement du statut du jeu
+					document.getElementById("status").textContent = "";
 					
-					//window.requestAnimationFrame( main );
+					game.stopMain = window.requestAnimationFrame( main );
+					
+					if (game.continue){
+						// Calcul de la différence entre le tFrame du stop animation et de celui qui reprends l'animation
+						game.tFrameGap = tFrame - game.tFrameLast;
+						
+						// Une seule définition du gap après reprise de l'animation
+						game.continue = false;
+						
+					}
+					
+					game.animationStartTime = window.performance.now();
+					
+					// Utilisation de gameControl.js
+					game.update(tFrame - game.tFrameGap);
+
+				} else {
+					// Changement du statut du jeu
+					document.getElementById("status").textContent = "En pause";
 				}
 			}
 
 			main(0);
-
+			
 		</script>
 	</body>
 </html>
