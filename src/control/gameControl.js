@@ -162,7 +162,7 @@ function manageScore () {
 		game.run = false;
 	}
 	
-	if (game.score >= 1) {
+	if (game.score >= 10) {
 		// Augmentation de la vitesse des spaceShip
 		game.speedSpaceShip = 140;
 		
