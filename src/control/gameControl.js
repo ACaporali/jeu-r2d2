@@ -4,7 +4,6 @@ const playgroundOffsetTop = window.document.getElementById("playground").offsetT
 const playgroundWidth = 800;
 const playgroundHeight = 600;
 
-const timeCreatSpaceShip = 1000;
 const listImageSpaceShipLight = {
 	0: "image/anakin_starfighter.png",
 	1: "image/naboo_starfighter.png",
@@ -16,6 +15,7 @@ const listImageSpaceShipDark = {
 	0: "image/tie_fighter.png"
 }
 
+let timeCreateSpaceShip = 1000;
 let game = {
 	arrowLeft : false,
 	arrowRight : false,
@@ -97,10 +97,8 @@ game.update = function (tFrame) {
 	}
 }
 
-
-
 // Création de spaceShip toutes les X secondes
-setInterval(function (){
+function createSpaceShip () {
 	if (game.run) {
 		// Paramètres du nouveau SpaceShip
 		const newId = size + 1;
@@ -113,8 +111,9 @@ setInterval(function (){
 		// Incrémentation de size (nb de SpaceShip créés)
 		size = newId;
 	}
-	
-}, timeCreatSpaceShip );
+}
+
+let variable = setInterval(createSpaceShip, timeCreateSpaceShip);
 
 
 // Renvoie un nombre aléatoire compris entre 0 et "max"
@@ -156,13 +155,25 @@ function getImage(side) {
 	}
 }
 
+// Gestion des évènements en fonction du score du joueur
 function manageScore () {
 	if (game.score >= 20) {
+		alert("L'Alliance est sauvee !");
 		game.run = false;
-		alert("Vous avez survecu !");
 	}
 	
-	if (game.score >= 10) {
+	if (game.score >= 1) {
+		// Augmentation de la vitesse des spaceShip
 		game.speedSpaceShip = 140;
+		
+		// Creation de spaceShip plus rapide
+		timeCreateSpaceShip = 700;	
+		clearInterval(variable);
+		variable = setInterval(createSpaceShip, timeCreateSpaceShip);
+	}
+	
+	if (game.score < 0) {
+		alert("Vous n'avez pas survecu a l'Empire :'(");
+		game.run = false;
 	}
 }
